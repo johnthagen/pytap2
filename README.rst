@@ -1,5 +1,5 @@
-`pytap2` - Object oriented interface to Linx Tun/Tap devices
-============================================================
+`pytap2` - Object oriented interface to Linux Tun/Tap devices
+=============================================================
 
 Fork of `PyTap <https://pypi.python.org/pypi/PyTap/>`_ that supports Python 3.
 
