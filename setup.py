@@ -8,7 +8,7 @@ setuptools.setup(
 
     description='Object-oriented wrapper around Linux TUN/TAP device',
     long_description=open('README.rst').read(),
-    keywords=('tun', 'tap', 'networking'),
+    keywords=('pytap', 'tun', 'tap', 'networking'),
 
     author='John Hagen',
     author_email='johnthagen@gmail.com',
