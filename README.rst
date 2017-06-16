@@ -1,5 +1,5 @@
-`pytap2` - Object oriented interface to Linux Tun/Tap devices
-=============================================================
+``pytap2`` - Object oriented interface to Linux Tun/Tap devices
+===============================================================
 
 .. image:: https://travis-ci.org/johnthagen/pytap2.svg
     :target: https://travis-ci.org/johnthagen/pytap2
