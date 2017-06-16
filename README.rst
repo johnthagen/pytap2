@@ -19,7 +19,7 @@
 .. image:: https://img.shields.io/pypi/pyversions/pytap2.svg
     :target: https://pypi.python.org/pypi/pytap2/
 
-Fork of `PyTap <https://pypi.python.org/pypi/PyTap/>`_ that supports Python 3.
+Fork of `PyTap <https://pypi.python.org/pypi/PyTap/>`_ that supports Python 2 & 3.
 
 Installation
 ------------
