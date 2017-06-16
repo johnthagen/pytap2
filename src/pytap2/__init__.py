@@ -14,7 +14,7 @@ IFF_TAP = 0x0002
 
 
 class TapDevice(object):
-    """ TUN/TAP device object """
+    """TUN/TAP device object."""
 
     def __init__(self, mode=IFF_TUN, name='', dev='/dev/net/tun', mtu=1500):
         # type: (int, str, str, int) -> None
