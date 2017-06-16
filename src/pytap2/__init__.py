@@ -1,12 +1,14 @@
 """Module that wraps the Linux TUN/TAP device."""
 
+from __future__ import absolute_import, division, print_function
+
 import atexit
 import fcntl
 import os
 import struct
 
-
 TUNSETIFF = 0x400454ca
+
 IFF_TUN = 0x0001
 IFF_TAP = 0x0002
 
@@ -14,9 +16,8 @@ IFF_TAP = 0x0002
 class TapDevice(object):
     """ TUN/TAP device object """
 
-    DEFAULT_MTU = 1500
-
-    def __init__(self, mode=IFF_TUN, name='', dev='/dev/net/tun'):
+    def __init__(self, mode=IFF_TUN, name='', dev='/dev/net/tun', mtu=1500):
+        # type: (int, str, str, int) -> None
         """Initialize TUN/TAP device object.
 
         Args:
@@ -41,33 +42,33 @@ class TapDevice(object):
 
         # Open control device and request interface.
         fd = os.open(dev, os.O_RDWR)
-        ifs = fcntl.ioctl(fd, TUNSETIFF, struct.pack('16sH', self.name, self.mode))
+        ifs = fcntl.ioctl(fd, TUNSETIFF, struct.pack('16sH', self.name.encode(), self.mode))
 
         # Retrieve real interface name from control device.
-        self.name = ifs[:16].strip('\x00')
+        self.name = ifs[:16].strip(b'\x00').decode()
 
         # Set default MTU.
-        self.mtu = self.DEFAULT_MTU
+        self.mtu = mtu
 
         # Store fd for later.
-        self.__fd__ = fd
+        self._fd = fd
 
         # Properly close device on exit.
         atexit.register(self.close)
 
     def read(self):
+        # type: () -> bytes
         """Read data from the device.
 
         The device mtu determines how many bytes will be read. The data read from the device
         is returned in its raw form.
         """
-
-        data = os.read(self.__fd__, self.mtu)
-        return data
+        return os.read(self._fd, self.mtu)
 
     def write(self, data):
+        # type: (bytes) -> None
         """Write data to the device. No care is taken for MTU limitations or similar."""
-        os.write(self.__fd__, data)
+        os.write(self._fd, data)
 
     def ifconfig(self, **args):
         """Issue ifconfig command on the device.
@@ -81,49 +82,43 @@ class TapDevice(object):
             hwclass: Hardware class, normally ether for ethernet.
             hwaddress: Hardware (MAC) address, in conjunction with hwclass.
         """
-        ifconfig = 'ifconfig ' + self.name + ' '
+        # TODO: New systems like Ubuntu 17.04 do not come with ifconfig pre-installed.
+        ifconfig_cmd = 'ifconfig ' + self.name + ' '
 
-        # IP address ?
         try:
-            ifconfig = ifconfig + args['address'] + ' '
+            ifconfig_cmd = ifconfig_cmd + args['address'] + ' '
         except KeyError:
             pass
 
-        # Network mask ?
         try:
-            ifconfig = ifconfig + 'netmask ' + args['netmask'] + ' '
+            ifconfig_cmd = ifconfig_cmd + 'netmask ' + args['netmask'] + ' '
         except KeyError:
             pass
 
-        # Network base address ?
         try:
-            ifconfig = ifconfig + 'network ' + args['network'] + ' '
+            ifconfig_cmd = ifconfig_cmd + 'network ' + args['network'] + ' '
         except KeyError:
             pass
 
-        # Broadcast address ?
         try:
-            ifconfig = ifconfig + 'broadcast ' + args['broadcast'] + ' '
+            ifconfig_cmd = ifconfig_cmd + 'broadcast ' + args['broadcast'] + ' '
         except KeyError:
             pass
 
-        # MTU ?
         try:
-            ifconfig = ifconfig + 'mtu ' + str(args['mtu']) + ' '
+            ifconfig_cmd = ifconfig_cmd + 'mtu ' + str(args['mtu']) + ' '
         except KeyError:
             pass
 
-        # Hardware address ?
         try:
-            ifconfig = ifconfig + 'hw ' + args['hwclass'] + ' ' + args['hwaddress'] + ' '
+            ifconfig_cmd = ifconfig_cmd + 'hw ' + args['hwclass'] + ' ' + args['hwaddress'] + ' '
         except KeyError:
             pass
 
-        # Try to set off ifconfig command
-        ret = os.system(ifconfig)
+        ret = os.system(ifconfig_cmd)
 
         if ret != 0:
-            raise IfconfigError()
+            raise IfconfigError('ifconfig command failed.')
 
         # Save MTU if ifconfig was successful so buffer sizes can be adjusted.
         try:
@@ -132,6 +127,7 @@ class TapDevice(object):
             pass
 
     def up(self):
+        # type: () -> None
         """Bring up device. This will effectively run "ifconfig up" on the device."""
         ret = os.system('ifconfig ' + self.name + ' up')
 
@@ -139,6 +135,7 @@ class TapDevice(object):
             raise IfconfigError()
 
     def down(self):
+        # type: () -> None
         """Bring down device. This will effectively call "ifconfig down" on the device."""
         ret = os.system('ifconfig ' + self.name + ' down')
 
@@ -146,6 +143,7 @@ class TapDevice(object):
             raise IfconfigError()
 
     def close(self):
+        # type: () -> None
         """Close the control channel.
 
         This will effectively drop all locks and remove the TUN/TAP device.
@@ -153,7 +151,7 @@ class TapDevice(object):
         You must manually take care that your code does not try to operate on the interface
         after closing the control channel.
         """
-        os.close(self.__fd__)
+        os.close(self._fd)
 
 
 class IfconfigError(Exception):
