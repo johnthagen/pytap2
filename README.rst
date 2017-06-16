@@ -31,3 +31,16 @@ You can install, upgrade, and uninstall ``pytap2`` with these commands:
     $ pip install pytap2
     $ pip install --upgrade pytap2
     $ pip uninstall pytap2
+
+Usage
+-----
+
+.. code:: python
+
+    from pytap2 import TapDevice
+
+    device = TapDevice()
+    device.up()
+    device.ifconfig(mtu=1300)
+    device.write(b'0000')
+    device.close()
