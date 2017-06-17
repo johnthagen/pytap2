@@ -3,11 +3,11 @@
 from __future__ import absolute_import, division, print_function
 
 import atexit
+import enum
 import fcntl
 import os
 import struct
 
-import enum
 
 TUNSETIFF = 0x400454ca
 
