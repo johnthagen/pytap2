@@ -52,6 +52,12 @@ Usage
 Releases
 --------
 
+1.1.0 - 2017-06-17
+^^^^^^^^^^^^^^^^^^
+
+Allow ``read()`` to be called with a specific number of bytes to read.
+
+
 1.0.0 - 2017-06-16
 ^^^^^^^^^^^^^^^^^^
 
