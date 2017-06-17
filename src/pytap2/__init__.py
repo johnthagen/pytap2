@@ -65,29 +65,29 @@ class TapDevice(object):
 
     @property
     def name(self):
-        """The device name."""
         # type: () -> str
+        """The device name."""
         return self._name
 
     @property
     def mode(self):
-        """The device mode (tap or tun)."""
         # type: () -> TapMode
+        """The device mode (tap or tun)."""
         return self._mode
 
     @property
     def mtu(self):
-        """The device MTU."""
         # type: () -> int
+        """The device MTU."""
         return self._mtu
 
     @property
     def fd(self):
+        # type: () -> int
         """The device file descriptor.
 
         Can be used in calls to select().
         """
-        # type: () -> int
         return self._fd
 
     def read(self):
