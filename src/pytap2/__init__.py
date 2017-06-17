@@ -90,14 +90,17 @@ class TapDevice(object):
         """
         return self._fd
 
-    def read(self):
-        # type: () -> bytes
+    def read(self, num_bytes=None):
+        # type: (int) -> bytes
         """Read data from the device.
 
-        The device MTU determines how many bytes will be read. The data read from the device
-        is returned in its raw form.
+        Args:
+            num_bytes: The number of bytes to read. If not specified, the MTU size is used.
         """
-        return os.read(self._fd, self._mtu)
+        if num_bytes is None:
+            num_bytes = self._mtu
+
+        return os.read(self._fd, num_bytes)
 
     def write(self, data):
         # type: (bytes) -> None
