@@ -44,3 +44,11 @@ Usage
     device.ifconfig(mtu=1300)
     device.write(b'0000')
     device.close()
+
+Releases
+--------
+
+1.0.0 - 2017-06-16
+^^^^^^^^^^^^^^^^^^
+
+Initial release that supports Python 2 and 3.
