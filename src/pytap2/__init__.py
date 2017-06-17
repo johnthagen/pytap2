@@ -65,13 +65,13 @@ class TapDevice(object):
 
     @property
     def name(self):
-        """The device MTU."""
+        """The device name."""
         # type: () -> str
         return self._name
 
     @property
     def mode(self):
-        """The device MTU."""
+        """The device mode (tap or tun)."""
         # type: () -> TapMode
         return self._mode
 
