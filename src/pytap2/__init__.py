@@ -39,11 +39,13 @@ class TapDevice(object):
                 will be provided. An integer will be added to build the real device name.
             dev: The device node name the control channel is connected to.
         """
+        self._mode = mode
+
         # Create interface name to request from tuntap module.
         if name is None:
-            if mode is TapMode.Tun:
+            if self._mode is TapMode.Tun:
                 self._name = 'tun%d'
-            elif mode is TapMode.Tap:
+            elif self._mode is TapMode.Tap:
                 self._name = 'tap%d'
         else:
             self._name = name + '%d'
@@ -51,7 +53,7 @@ class TapDevice(object):
         # Open control device and request interface.
         self._fd = os.open(dev, os.O_RDWR)
         ifs = fcntl.ioctl(self._fd, TUNSETIFF,
-                          struct.pack('16sH', self._name.encode(), mode.value))
+                          struct.pack('16sH', self._name.encode(), self._mode.value))
 
         # Retrieve real interface name from control device.
         self._name = ifs[:16].strip(b'\x00').decode()
@@ -66,6 +68,12 @@ class TapDevice(object):
         """The device MTU."""
         # type: () -> str
         return self._name
+
+    @property
+    def mode(self):
+        """The device MTU."""
+        # type: () -> TapMode
+        return self._mode
 
     @property
     def mtu(self):
