@@ -13,7 +13,7 @@ setuptools.setup(
     name='pytap2',
     version='1.0.0',
 
-    description='Object-oriented wrapper around Linux TUN/TAP device',
+    description='Object-oriented wrapper around the Linux Tun/Tap device',
     long_description=open('README.rst').read(),
     keywords=('pytap', 'tun', 'tap', 'networking'),
 
