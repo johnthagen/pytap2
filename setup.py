@@ -1,6 +1,13 @@
 #! /usr/bin/env python3
 
+import sys
+
 import setuptools
+
+
+install_requires = []
+if sys.version_info < (3, 4):
+    install_requires.append('enum34')
 
 setuptools.setup(
     name='pytap2',
@@ -13,7 +20,9 @@ setuptools.setup(
     author='John Hagen',
     author_email='johnthagen@gmail.com',
     url='https://github.com/johnthagen/pytap2',
+    licence='MIT',
     packages=setuptools.find_packages(),
+    install_requires=install_requires,
     zip_safe=False,
 
     classifiers=[
