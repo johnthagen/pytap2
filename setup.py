@@ -20,8 +20,9 @@ setuptools.setup(
     author='John Hagen',
     author_email='johnthagen@gmail.com',
     url='https://github.com/johnthagen/pytap2',
-    licence='MIT',
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages('src'),
+    package_dir={'': 'src'},
+    include_package_data=True,
     install_requires=install_requires,
     zip_safe=False,
 

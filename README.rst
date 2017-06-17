@@ -10,6 +10,10 @@
 .. image:: https://codeclimate.com/github/johnthagen/pytap2/badges/issue_count.svg
    :target: https://codeclimate.com/github/johnthagen/pytap2
 
+
+.. image:: https://codecov.io/github/johnthagen/pytap2/coverage.svg
+    :target: https://codecov.io/github/johnthagen/pytap2
+
 .. image:: https://img.shields.io/pypi/v/pytap2.svg
     :target: https://pypi.python.org/pypi/pytap2
 
