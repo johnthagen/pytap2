@@ -11,7 +11,7 @@ if sys.version_info < (3, 4):
 
 setuptools.setup(
     name='pytap2',
-    version='0.2.0',
+    version='1.0.0',
 
     description='Object-oriented wrapper around Linux TUN/TAP device',
     long_description=open('README.rst').read(),
