@@ -63,6 +63,14 @@ class TapDevice(object):
         # Properly close device on exit.
         atexit.register(self.close)
 
+    def __enter__(self):
+        # type: () -> 'TapDevice'
+        self.up()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        self.close()
+
     @property
     def name(self):
         # type: () -> str
@@ -189,7 +197,10 @@ class TapDevice(object):
         You must manually take care that your code does not try to operate on the interface
         after closing the control channel.
         """
-        os.close(self._fd)
+        try:
+            os.close(self._fd)
+        except OSError:
+            pass
 
 
 class IfconfigError(Exception):

@@ -39,6 +39,19 @@ You can install, upgrade, and uninstall ``pytap2`` with these commands:
 Usage
 -----
 
+Using as a context manager automatically brings up the device and closes it at the
+end of the ``with`` block.
+
+.. code:: python
+
+    from pytap2 import TapDevice
+
+    with TapDevice() as device:
+        device.ifconfig(mtu=1300)
+        device.write(b'0000')
+
+Or manually call ``up()`` and ``close()``.
+
 .. code:: python
 
     from pytap2 import TapDevice
@@ -51,6 +64,11 @@ Usage
 
 Releases
 --------
+
+1.2.0 - 2017-06-19
+^^^^^^^^^^^^^^^^^^
+
+Context manager support added.
 
 1.1.0 - 2017-06-17
 ^^^^^^^^^^^^^^^^^^
