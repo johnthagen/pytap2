@@ -62,8 +62,16 @@ Or manually call ``up()`` and ``close()``.
     device.write(b'0000')
     device.close()
 
+The ``fileno()`` method is defined, so that the device object can be passed directly
+to `select() <https://docs.python.org/library/select.html#select.select>`_.
+
 Releases
 --------
+
+1.3.0 - 2017-07-31
+^^^^^^^^^^^^^^^^^^
+
+Add ``fileno()`` method to support `select()` calls.
 
 1.2.0 - 2017-06-19
 ^^^^^^^^^^^^^^^^^^
