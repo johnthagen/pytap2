@@ -71,7 +71,7 @@ Releases
 1.3.0 - 2017-07-31
 ^^^^^^^^^^^^^^^^^^
 
-Add ``fileno()`` method to support `select()` calls.
+Add ``fileno()`` method to support ``select()`` calls.
 
 1.2.0 - 2017-06-19
 ^^^^^^^^^^^^^^^^^^
