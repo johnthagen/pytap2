@@ -92,9 +92,15 @@ class TapDevice(object):
     @property
     def fd(self):
         # type: () -> int
+        """The device file descriptor."""
+        return self._fd
+
+    def fileno(self):
+        # type: () -> int
         """The device file descriptor.
 
-        Can be used in calls to select().
+        This method is named specifically so that the object can be
+        passed to select.select() calls.
         """
         return self._fd
 
