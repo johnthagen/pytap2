@@ -14,7 +14,7 @@ IFF_NO_PI = 0x1000
 """Mask to disable packet information from being prepended to packets sent through TUN/TAP."""
 
 PACKET_INFO_SIZE = 4
-"""Size of packet information, in bytes, prepended to packets sent in TUN/TAP when packet 
+"""Size of packet information, in bytes, prepended to packets sent in TUN/TAP when packet
 information is enabled."""
 
 
