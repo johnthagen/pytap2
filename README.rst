@@ -68,6 +68,12 @@ to `select() <https://docs.python.org/library/select.html#select.select>`_.
 Releases
 --------
 
+1.4.0 - 2017-10-24
+^^^^^^^^^^^^^^^^^^
+
+Allow disabling packet information header (``IFF_NO_PI``) and default ``read()`` to read entire
+MTU worth of data plus the packet information header if present.
+
 1.3.0 - 2017-07-31
 ^^^^^^^^^^^^^^^^^^
 
