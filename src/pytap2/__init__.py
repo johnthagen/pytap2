@@ -8,8 +8,14 @@ import fcntl
 import os
 import struct
 
-
 TUNSETIFF = 0x400454ca
+
+IFF_NO_PI = 0x1000
+"""Mask to disable packet information from being prepended to packets sent through TUN/TAP."""
+
+PACKET_INFO_SIZE = 4
+"""Size of packet information, in bytes, prepended to packets sent in TUN/TAP when packet 
+information is enabled."""
 
 
 @enum.unique
@@ -29,8 +35,9 @@ class TapMode(enum.Enum):
 class TapDevice(object):
     """Tun/Tap device object."""
 
-    def __init__(self, mode=TapMode.Tun, name=None, dev='/dev/net/tun', mtu=1500):
-        # type: (TapMode, str, str, int) -> None
+    def __init__(self, mode=TapMode.Tun, name=None, dev='/dev/net/tun', mtu=1500,
+                 enable_packet_info=False):
+        # type: (TapMode, str, str, int, bool) -> None
         """Initialize TUN/TAP device object.
 
         Args:
@@ -38,6 +45,9 @@ class TapDevice(object):
             name: The name of the new device. If not supplied, a default
                 will be provided. An integer will be added to build the real device name.
             dev: The device node name the control channel is connected to.
+            mtu: The MTU size, in bytes, to be applied to the new device.
+            enable_packet_info: Whether or not to enable packet information header to be
+                prepended to each
         """
         self._mode = mode
 
@@ -52,8 +62,14 @@ class TapDevice(object):
 
         # Open control device and request interface.
         self._fd = os.open(dev, os.O_RDWR)
+
+        self._enable_packet_info = enable_packet_info
+        mode_value = self._mode.value
+        if not self._enable_packet_info:
+            mode_value |= IFF_NO_PI
+
         ifs = fcntl.ioctl(self._fd, TUNSETIFF,
-                          struct.pack('16sH', self._name.encode(), self._mode.value))
+                          struct.pack('16sH', self._name.encode(), mode_value))
 
         # Retrieve real interface name from control device.
         self._name = ifs[:16].strip(b'\x00').decode()
@@ -90,6 +106,12 @@ class TapDevice(object):
         return self._mtu
 
     @property
+    def is_packet_information_enabled(self):
+        # type: () -> bool
+        """Whether packet information header is enabled for this device."""
+        return self._enable_packet_info
+
+    @property
     def fd(self):
         # type: () -> int
         """The device file descriptor."""
@@ -109,10 +131,16 @@ class TapDevice(object):
         """Read data from the device.
 
         Args:
-            num_bytes: The number of bytes to read. If not specified, the MTU size is used.
+            num_bytes: The number of bytes to read. If not specified, the MTU size is used,
+                including the optional packet information header if enabled on a the device.
         """
         if num_bytes is None:
             num_bytes = self._mtu
+            # If packet information is enabled, 4 extra bytes will be appended to a packet
+            # that is potentially already the maximum MTU size, so ensure that by
+            # default we can read one entire MTU-sized packet and this header.
+            if self._enable_packet_info:
+                num_bytes += PACKET_INFO_SIZE
 
         return os.read(self._fd, num_bytes)
 
