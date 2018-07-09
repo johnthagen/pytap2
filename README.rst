@@ -1,7 +1,7 @@
 ``pytap2`` - Object oriented interface to Linux Tun/Tap devices
 ===============================================================
 
-.. image:: https://travis-ci.org/johnthagen/pytap2.svg
+.. image:: https://travis-ci.org/johnthagen/pytap2.svg?branch=master
     :target: https://travis-ci.org/johnthagen/pytap2
 
 .. image:: https://codeclimate.com/github/johnthagen/pytap2/badges/gpa.svg
