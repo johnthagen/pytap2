@@ -68,6 +68,11 @@ to `select() <https://docs.python.org/library/select.html#select.select>`_.
 Releases
 --------
 
+1.5.0 - 2018-07-09
+^^^^^^^^^^^^^^^^^^
+
+Support Python 3.7.
+
 1.4.0 - 2017-10-24
 ^^^^^^^^^^^^^^^^^^
 
