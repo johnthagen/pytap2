@@ -1,6 +1,6 @@
+pytest
+pytest-cov
 flake8>=3.0.3
 pep8-naming
 flake8-quotes
 flake8-import-order
-pytest
-pytest-cov
