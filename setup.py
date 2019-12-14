@@ -26,6 +26,7 @@ setuptools.setup(
     install_requires=install_requires,
     zip_safe=False,
 
+    license='MIT',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
