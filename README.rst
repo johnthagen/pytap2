@@ -68,6 +68,12 @@ to `select() <https://docs.python.org/library/select.html#select.select>`_.
 Releases
 --------
 
+Unreleased
+^^^^^^^^^^
+
+- Drop Python 3.4 and support Python 3.8.
+- Include license file.
+
 1.5.0 - 2018-07-09
 ^^^^^^^^^^^^^^^^^^
 
