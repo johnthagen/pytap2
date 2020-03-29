@@ -1,7 +1,5 @@
 """Module that wraps the Linux Tun/Tap device."""
 
-from __future__ import absolute_import, division, print_function
-
 import atexit
 import enum
 import fcntl
@@ -32,12 +30,11 @@ class TapMode(enum.Enum):
     """IFF_TAP"""
 
 
-class TapDevice(object):
+class TapDevice:
     """Tun/Tap device object."""
 
-    def __init__(self, mode=TapMode.Tun, name=None, dev='/dev/net/tun', mtu=1500,
-                 enable_packet_info=False):
-        # type: (TapMode, str, str, int, bool) -> None
+    def __init__(self, mode: TapMode = TapMode.Tun, name: str = None, dev: str = '/dev/net/tun',
+                 mtu: int = 1500, enable_packet_info: bool = False) -> None:
         """Initialize TUN/TAP device object.
 
         Args:
@@ -68,7 +65,7 @@ class TapDevice(object):
         if not self._enable_packet_info:
             mode_value |= IFF_NO_PI
 
-        ifs = fcntl.ioctl(self._fd, TUNSETIFF,
+        ifs = fcntl.ioctl(self._fd, TUNSETIFF,  # type: ignore
                           struct.pack('16sH', self._name.encode(), mode_value))
 
         # Retrieve real interface name from control device.
@@ -79,8 +76,7 @@ class TapDevice(object):
         # Properly close device on exit.
         atexit.register(self.close)
 
-    def __enter__(self):
-        # type: () -> 'TapDevice'
+    def __enter__(self) -> 'TapDevice':
         self.up()
         return self
 
@@ -88,37 +84,31 @@ class TapDevice(object):
         self.close()
 
     @property
-    def name(self):
-        # type: () -> str
+    def name(self) -> str:
         """The device name."""
         return self._name
 
     @property
-    def mode(self):
-        # type: () -> TapMode
+    def mode(self) -> TapMode:
         """The device mode (tap or tun)."""
         return self._mode
 
     @property
-    def mtu(self):
-        # type: () -> int
+    def mtu(self) -> int:
         """The device MTU."""
         return self._mtu
 
     @property
-    def is_packet_information_enabled(self):
-        # type: () -> bool
+    def is_packet_information_enabled(self) -> bool:
         """Whether packet information header is enabled for this device."""
         return self._enable_packet_info
 
     @property
-    def fd(self):
-        # type: () -> int
+    def fd(self) -> int:
         """The device file descriptor."""
         return self._fd
 
-    def fileno(self):
-        # type: () -> int
+    def fileno(self) -> int:
         """The device file descriptor.
 
         This method is named specifically so that the object can be
@@ -126,8 +116,7 @@ class TapDevice(object):
         """
         return self._fd
 
-    def read(self, num_bytes=None):
-        # type: (int) -> bytes
+    def read(self, num_bytes: int = None) -> bytes:
         """Read data from the device.
 
         Args:
@@ -144,8 +133,7 @@ class TapDevice(object):
 
         return os.read(self._fd, num_bytes)
 
-    def write(self, data):
-        # type: (bytes) -> None
+    def write(self, data: bytes) -> None:
         """Write data to the device. No care is taken for MTU limitations or similar."""
         os.write(self._fd, data)
 
@@ -206,24 +194,21 @@ class TapDevice(object):
         except KeyError:
             pass
 
-    def up(self):
-        # type: () -> None
+    def up(self) -> None:
         """Bring up device. This will effectively run "ifconfig up" on the device."""
         ret = os.system('ifconfig {} up'.format(self._name))
 
         if ret != 0:
             raise IfconfigError()
 
-    def down(self):
-        # type: () -> None
+    def down(self) -> None:
         """Bring down device. This will effectively call "ifconfig down" on the device."""
         ret = os.system('ifconfig {} down'.format(self._name))
 
         if ret != 0:
             raise IfconfigError()
 
-    def close(self):
-        # type: () -> None
+    def close(self) -> None:
         """Close the control channel.
 
         This will effectively drop all locks and remove the TUN/TAP device.
