@@ -65,7 +65,7 @@ class TapDevice:
         if not self._enable_packet_info:
             mode_value |= IFF_NO_PI
 
-        ifs = fcntl.ioctl(self._fd, TUNSETIFF,
+        ifs = fcntl.ioctl(self._fd, TUNSETIFF,  # type: ignore
                           struct.pack('16sH', self._name.encode(), mode_value))
 
         # Retrieve real interface name from control device.
