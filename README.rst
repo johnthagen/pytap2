@@ -23,7 +23,7 @@
 .. image:: https://img.shields.io/pypi/pyversions/pytap2.svg
     :target: https://pypi.python.org/pypi/pytap2/
 
-Fork of `PyTap <https://pypi.python.org/pypi/PyTap/>`_ that supports Python 2 & 3.
+Fork of `PyTap <https://pypi.python.org/pypi/PyTap/>`_ that supports Python 3.
 
 Installation
 ------------
@@ -67,6 +67,11 @@ to `select() <https://docs.python.org/library/select.html#select.select>`_.
 
 Releases
 --------
+
+2.0.0 - 2020-03-29
+^^^^^^^^^^^^^^^^^^
+
+- Drop Python 2.7.
 
 1.6.0 - 2019-12-15
 ^^^^^^^^^^^^^^^^^^
