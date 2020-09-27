@@ -67,6 +67,11 @@ to `select() <https://docs.python.org/library/select.html#select.select>`_.
 Releases
 --------
 
+Unreleased
+^^^^^^^^^^
+
+- Drop Python 3.5.
+
 2.0.0 - 2020-03-29
 ^^^^^^^^^^^^^^^^^^
 
