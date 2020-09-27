@@ -5,6 +5,7 @@ import enum
 import fcntl
 import os
 import struct
+from typing import Optional
 
 TUNSETIFF = 0x400454CA
 
@@ -36,7 +37,7 @@ class TapDevice:
     def __init__(
         self,
         mode: TapMode = TapMode.Tun,
-        name: str = None,
+        name: Optional[str] = None,
         dev: str = "/dev/net/tun",
         mtu: int = 1500,
         enable_packet_info: bool = False,
@@ -125,7 +126,7 @@ class TapDevice:
         """
         return self._fd
 
-    def read(self, num_bytes: int = None) -> bytes:
+    def read(self, num_bytes: Optional[int] = None) -> bytes:
         """Read data from the device.
 
         Args:
