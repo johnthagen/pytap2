@@ -5,8 +5,9 @@ import enum
 import fcntl
 import os
 import struct
+from typing import Optional
 
-TUNSETIFF = 0x400454ca
+TUNSETIFF = 0x400454CA
 
 IFF_NO_PI = 0x1000
 """Mask to disable packet information from being prepended to packets sent through TUN/TAP."""
@@ -33,8 +34,14 @@ class TapMode(enum.Enum):
 class TapDevice:
     """Tun/Tap device object."""
 
-    def __init__(self, mode: TapMode = TapMode.Tun, name: str = None, dev: str = '/dev/net/tun',
-                 mtu: int = 1500, enable_packet_info: bool = False) -> None:
+    def __init__(
+        self,
+        mode: TapMode = TapMode.Tun,
+        name: Optional[str] = None,
+        dev: str = "/dev/net/tun",
+        mtu: int = 1500,
+        enable_packet_info: bool = False,
+    ) -> None:
         """Initialize TUN/TAP device object.
 
         Args:
@@ -51,11 +58,11 @@ class TapDevice:
         # Create interface name to request from tuntap module.
         if name is None:
             if self._mode is TapMode.Tun:
-                self._name = 'tun%d'
+                self._name = "tun%d"
             elif self._mode is TapMode.Tap:
-                self._name = 'tap%d'
+                self._name = "tap%d"
         else:
-            self._name = name + '%d'
+            self._name = name + "%d"
 
         # Open control device and request interface.
         self._fd = os.open(dev, os.O_RDWR)
@@ -65,18 +72,21 @@ class TapDevice:
         if not self._enable_packet_info:
             mode_value |= IFF_NO_PI
 
-        ifs = fcntl.ioctl(self._fd, TUNSETIFF,  # type: ignore
-                          struct.pack('16sH', self._name.encode(), mode_value))
+        ifs = fcntl.ioctl(
+            self._fd,
+            TUNSETIFF,  # type: ignore
+            struct.pack("16sH", self._name.encode(), mode_value),
+        )
 
         # Retrieve real interface name from control device.
-        self._name = ifs[:16].strip(b'\x00').decode()
+        self._name = ifs[:16].strip(b"\x00").decode()
 
         self._mtu = mtu
 
         # Properly close device on exit.
         atexit.register(self.close)
 
-    def __enter__(self) -> 'TapDevice':
+    def __enter__(self) -> "TapDevice":
         self.up()
         return self
 
@@ -116,7 +126,7 @@ class TapDevice:
         """
         return self._fd
 
-    def read(self, num_bytes: int = None) -> bytes:
+    def read(self, num_bytes: Optional[int] = None) -> bytes:
         """Read data from the device.
 
         Args:
@@ -150,60 +160,61 @@ class TapDevice:
             hwaddress: Hardware (MAC) address, in conjunction with hwclass.
         """
         # TODO: New systems like Ubuntu 17.04 do not come with ifconfig pre-installed.
-        ifconfig_cmd = 'ifconfig {} '.format(self._name)
+        ifconfig_cmd = "ifconfig {} ".format(self._name)
 
         try:
-            ifconfig_cmd = '{} {} '.format(ifconfig_cmd, args['address'])
+            ifconfig_cmd = "{} {} ".format(ifconfig_cmd, args["address"])
         except KeyError:
             pass
 
         try:
-            ifconfig_cmd = '{} {} {} '.format(ifconfig_cmd, 'netmask', args['netmask'])
+            ifconfig_cmd = "{} {} {} ".format(ifconfig_cmd, "netmask", args["netmask"])
         except KeyError:
             pass
 
         try:
-            ifconfig_cmd = '{} {} {} '.format(ifconfig_cmd, 'network', args['network'])
+            ifconfig_cmd = "{} {} {} ".format(ifconfig_cmd, "network", args["network"])
         except KeyError:
             pass
 
         try:
-            ifconfig_cmd = '{} {} {} '.format(ifconfig_cmd, 'broadcast', args['broadcast'])
+            ifconfig_cmd = "{} {} {} ".format(ifconfig_cmd, "broadcast", args["broadcast"])
         except KeyError:
             pass
 
         try:
-            ifconfig_cmd = '{} {} {} '.format(ifconfig_cmd, 'mtu', args['mtu'])
+            ifconfig_cmd = "{} {} {} ".format(ifconfig_cmd, "mtu", args["mtu"])
         except KeyError:
             pass
 
         try:
-            ifconfig_cmd = '{} {} {} {} '.format(ifconfig_cmd, 'hw', args['hwclass'],
-                                                 args['hwaddress'])
+            ifconfig_cmd = "{} {} {} {} ".format(
+                ifconfig_cmd, "hw", args["hwclass"], args["hwaddress"]
+            )
         except KeyError:
             pass
 
         ret = os.system(ifconfig_cmd)
 
         if ret != 0:
-            raise IfconfigError('ifconfig command failed.')
+            raise IfconfigError("ifconfig command failed.")
 
         # Save MTU if ifconfig was successful so buffer sizes can be adjusted.
         try:
-            self._mtu = args['mtu']
+            self._mtu = args["mtu"]
         except KeyError:
             pass
 
     def up(self) -> None:
         """Bring up device. This will effectively run "ifconfig up" on the device."""
-        ret = os.system('ifconfig {} up'.format(self._name))
+        ret = os.system("ifconfig {} up".format(self._name))
 
         if ret != 0:
             raise IfconfigError()
 
     def down(self) -> None:
         """Bring down device. This will effectively call "ifconfig down" on the device."""
-        ret = os.system('ifconfig {} down'.format(self._name))
+        ret = os.system("ifconfig {} down".format(self._name))
 
         if ret != 0:
             raise IfconfigError()

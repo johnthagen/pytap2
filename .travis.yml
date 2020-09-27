@@ -1,9 +1,7 @@
 language: python
-dist: xenial
+dist: bionic
 matrix:
     include:
-        - python: 3.5
-          env: TOXENV=py35
         - python: 3.6
           env: TOXENV=py36
         - python: 3.7
@@ -13,9 +11,9 @@ matrix:
         - python: 3.8
           env: TOXENV=pep8
         - python: 3.8
+          env: TOXENV=fmt-check
+        - python: 3.8
           env: TOXENV=mypy
-        - python: pypy3
-          env: TOXENV=pypy3
 
 install:
     - pip install tox

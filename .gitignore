@@ -6,3 +6,5 @@ __pycache__
 .coverage
 .coverage.*
 venv
+.tox
+.mypy_cache
