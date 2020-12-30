@@ -4,7 +4,7 @@ import setuptools
 
 setuptools.setup(
     name="pytap2",
-    version="2.0.0",
+    version="2.1.0",
     description="Object-oriented wrapper around the Linux Tun/Tap device for Python 2 and 3",
     long_description=open("README.rst").read(),
     keywords=("pytap", "tun", "tap", "networking"),
@@ -28,6 +28,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: Software Development :: Libraries :: Python Modules",
