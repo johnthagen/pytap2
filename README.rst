@@ -67,10 +67,11 @@ to `select() <https://docs.python.org/library/select.html#select.select>`_.
 Releases
 --------
 
-Unreleased
-^^^^^^^^^^
+2.1.0 - 2020-12-30
+^^^^^^^^^^^^^^^^^^
 
-- Drop Python 3.5.
+- Drop Python 3.5 and support Python 3.9.
+- Switch to GitHub Actions for CI.
 
 2.0.0 - 2020-03-29
 ^^^^^^^^^^^^^^^^^^
