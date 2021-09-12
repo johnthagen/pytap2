@@ -24,6 +24,23 @@
 
 Fork of `PyTap <https://pypi.python.org/pypi/PyTap/>`_ that supports Python 3.
 
+Requirements
+------------
+
+The ``ifconfig`` command line utility must be installed for ``pytap2`` to operate.
+
+To install ``ifconfig`` on Debian/Ubuntu:
+
+.. code:: shell-session
+
+    $ sudo apt install net-tools
+
+To install ``ifconfig`` on RHEL/Rocky Linux/Fedora:
+
+.. code:: shell-session
+
+    $ sudo yum install net-tools
+
 Installation
 ------------
 
