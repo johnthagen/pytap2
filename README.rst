@@ -84,6 +84,12 @@ to `select() <https://docs.python.org/library/select.html#select.select>`_.
 Releases
 --------
 
+2.2.0 - 2021-11-06
+^^^^^^^^^^^^^^^^^^
+
+- Drop Python 3.6 and support Python 3.10.
+- Document dependency on ``ifconfig``
+
 2.1.0 - 2020-12-30
 ^^^^^^^^^^^^^^^^^^
 
