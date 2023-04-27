@@ -131,7 +131,7 @@ class TapDevice:
 
         Args:
             num_bytes: The number of bytes to read. If not specified, the MTU size is used,
-                including the optional packet information header if enabled on a the device.
+                including the optional packet information header if enabled on the device.
         """
         if num_bytes is None:
             num_bytes = self._mtu
