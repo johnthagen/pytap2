@@ -5,7 +5,7 @@ import enum
 import fcntl
 import os
 import struct
-from typing import Optional, Any
+from typing import Any, Optional
 
 TUNSETIFF = 0x400454CA
 
