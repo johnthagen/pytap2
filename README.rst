@@ -84,6 +84,11 @@ to `select() <https://docs.python.org/library/select.html#select.select>`_.
 Releases
 --------
 
+Unreleased
+^^^^^^^^^^
+
+- Drop Python 3.7 and support Python 3.7
+
 2.2.0 - 2021-11-06
 ^^^^^^^^^^^^^^^^^^
 
