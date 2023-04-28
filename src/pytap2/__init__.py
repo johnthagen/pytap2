@@ -5,7 +5,7 @@ import enum
 import fcntl
 import os
 import struct
-from typing import Optional
+from typing import Any, Optional
 
 TUNSETIFF = 0x400454CA
 
@@ -74,7 +74,7 @@ class TapDevice:
 
         ifs = fcntl.ioctl(
             self._fd,
-            TUNSETIFF,  # type: ignore
+            TUNSETIFF,
             struct.pack("16sH", self._name.encode(), mode_value),
         )
 
@@ -90,7 +90,7 @@ class TapDevice:
         self.up()
         return self
 
-    def __exit__(self, exc_type, exc_value, exc_tb):
+    def __exit__(self, exc_type: Any, exc_value: Any, exc_tb: Any) -> None:
         self.close()
 
     @property
@@ -131,7 +131,7 @@ class TapDevice:
 
         Args:
             num_bytes: The number of bytes to read. If not specified, the MTU size is used,
-                including the optional packet information header if enabled on a the device.
+                including the optional packet information header if enabled on the device.
         """
         if num_bytes is None:
             num_bytes = self._mtu
@@ -147,7 +147,7 @@ class TapDevice:
         """Write data to the device. No care is taken for MTU limitations or similar."""
         os.write(self._fd, data)
 
-    def ifconfig(self, **args):
+    def ifconfig(self, **args: Any) -> None:
         """Issue ifconfig command on the device.
 
         Keyword Args:
