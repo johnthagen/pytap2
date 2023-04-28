@@ -87,7 +87,7 @@ Releases
 Unreleased
 ^^^^^^^^^^
 
-- Drop Python 3.7 and support Python 3.7
+- Drop Python 3.7 and support Python 3.11
 
 2.2.0 - 2021-11-06
 ^^^^^^^^^^^^^^^^^^
