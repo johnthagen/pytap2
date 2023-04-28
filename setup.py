@@ -13,6 +13,7 @@ setuptools.setup(
     url="https://github.com/johnthagen/pytap2",
     packages=setuptools.find_packages("src"),
     package_dir={"": "src"},
+    package_data={"pytap2": ["py.typed"]},
     include_package_data=True,
     python_requires=">=3.8",
     zip_safe=False,
