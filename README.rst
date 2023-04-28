@@ -84,10 +84,11 @@ to `select() <https://docs.python.org/library/select.html#select.select>`_.
 Releases
 --------
 
-Unreleased
-^^^^^^^^^^
+2.3.0 - 2023-04-28
+^^^^^^^^^^^^^^^^^^
 
 - Drop Python 3.7 and support Python 3.11
+- Support Mypy type checking for users
 
 2.2.0 - 2021-11-06
 ^^^^^^^^^^^^^^^^^^
