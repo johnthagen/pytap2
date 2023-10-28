@@ -84,6 +84,11 @@ to `select() <https://docs.python.org/library/select.html#select.select>`_.
 Releases
 --------
 
+Unreleased
+^^^^^^^^^^
+
+- Support Python 3.12.
+
 2.3.0 - 2023-04-28
 ^^^^^^^^^^^^^^^^^^
 
