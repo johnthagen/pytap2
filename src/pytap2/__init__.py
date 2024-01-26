@@ -5,6 +5,7 @@ import enum
 import fcntl
 import os
 import struct
+import subprocess
 from typing import Any, Optional
 
 TUNSETIFF = 0x400454CA
@@ -147,6 +148,56 @@ class TapDevice:
         """Write data to the device. No care is taken for MTU limitations or similar."""
         os.write(self._fd, data)
 
+
+    def ipconfig(self, **args: Any) -> None:
+        """Issue iproute2 command on the device.
+
+        Keyword Args:
+            address: IP address of the device, can be in CIDR notation (see man ip-address).
+            netmask: Network mask can use CIDR notation or 255.255.255.0.
+            broadcast: Broadcast address, normally set automatically.
+            mtu: Link MTU, this will also affect the read() method.
+            hwclass: Hardware class, normally ether for ethernet.
+            hwaddress: Hardware (MAC) address.
+        """
+        if 'address' in args:
+            address_cmd = ['ip', 'address', 'add']
+            address = args['address'].split('/', 1)
+            address = address[0]
+            if len(address) == 2:
+                netmask = address[1]
+            if 'netmask' in args:
+                netmask = str(args['netmask'])
+            if len(address) != 2 and 'netmask' not in args:
+                netmask = '24'
+            address_cmd.extend([f"{address}/{netmask}"])
+            if 'broadcast' in args:
+                address_cmd.extend(['broadcast', str(args['broadcast'])])
+            address_cmd.extend(['dev', self._name])
+
+            try:
+                subprocess.run(address_cmd, check=True)  # ['ip', 'address', 'add', '10.116.0.5/255.255.255.0', 'broadcast', '10.116.0.7', 'dev', 'tun0']
+            except subprocess.CalledProcessError as e:
+                raise IpconfigError("Unable to set IP address, Error: ", e)
+        else:
+            raise IpconfigError('No address provided to ipconfig')
+
+        link_cmds = []
+        if 'mtu' in args:
+            link_cmds.append(['ip', 'link', 'set', 'dev', self._name, 'mtu', str(args['mtu'])])
+        if 'hwclass' in args:
+            link_cmds.append(['ip', 'link', 'set', 'dev', self._name, 'type', str(args['hwclass'])])
+        if 'hwaddress' in args:
+            link_cmds.append(['ip', 'link', 'set', 'dev', self._name, 'address', str(args['hwaddress'])])
+
+        for link_cmd in link_cmds:
+            link_cmd_request = f'{link_cmd[5]} {link_cmd[6]}'  # mtu 1300
+            try:
+                subprocess.run(link_cmd, check=True)
+            except subprocess.CalledProcessError as e:
+                raise IpconfigError(f"Unable to set {link_cmd_request} Error: ", e)
+
+
     def ifconfig(self, **args: Any) -> None:
         """Issue ifconfig command on the device.
 
@@ -206,18 +257,22 @@ class TapDevice:
             pass
 
     def up(self) -> None:
-        """Bring up device. This will effectively run "ifconfig up" on the device."""
-        ret = os.system("ifconfig {} up".format(self._name))
-
-        if ret != 0:
-            raise IfconfigError()
+        """Bring up device. using iproute2 or ifconfig"""
+        try:
+            subprocess.run(['ip', 'link', 'set', 'dev', 'tun0', 'up'], check=True)
+        except subprocess.CalledProcessError:
+            subprocess.run(['ifconfig', self._name, 'up'], check=True)
+        except:
+            raise IfconfigError(f'Unable to set interface {self._name} up Ensure iproute2 ( recommended ) or ifconfig is installed')
 
     def down(self) -> None:
-        """Bring down device. This will effectively call "ifconfig down" on the device."""
-        ret = os.system("ifconfig {} down".format(self._name))
-
-        if ret != 0:
-            raise IfconfigError()
+        """Bring down device. using iproute2 or ifconfig"""
+        try:
+            subprocess.run(['ip', 'link', 'set', 'dev', self._name, 'down'], check=True)
+        except subprocess.CalledProcessError:
+            subprocess.run(['ifconfig', self._name, 'down'], check=True)
+        except:
+            raise IfconfigError(f'Unable to set interface {self._name} down. Ensure iproute2 ( recommended ) or ifconfig is installed')
 
     def close(self) -> None:
         """Close the control channel.
@@ -235,3 +290,6 @@ class TapDevice:
 
 class IfconfigError(Exception):
     """Exception thrown if an ifconfig command returns with a non-zero exit status."""
+
+class IpconfigError(Exception):
+    """Exception thrown if an ipconfig command returns with a non-zero exit status."""

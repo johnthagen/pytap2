@@ -27,9 +27,22 @@ Fork of `PyTap <https://pypi.python.org/pypi/PyTap/>`_ that supports Python 3.
 Requirements
 ------------
 
-The ``ifconfig`` command line utility must be installed for ``pytap2`` to operate.
+Either the ``iproute2`` ( Recommended/default ) or the ``ifconfig`` command line utility must be installed for ``pytap2`` to operate.
 
-To install ``ifconfig`` on Debian/Ubuntu:
+To install ``iproute2`` on Debian/Ubuntu ( recommended ):
+
+.. code:: shell-session
+
+    $ sudo apt install iproute2
+
+To install ``ipconfig`` on RHEL/Rocky Linux/Fedora:
+
+.. code:: shell-session
+
+    $ sudo yum install iproute2
+
+
+To install ``ifconfig`` on Debian/Ubuntu: ( not recommended )
 
 .. code:: shell-session
 
@@ -63,7 +76,7 @@ end of the ``with`` block.
     from pytap2 import TapDevice
 
     with TapDevice() as device:
-        device.ifconfig(mtu=1300)
+        device.ipconfig(mtu=1300)
         device.write(b'0000')
 
 Or manually call ``up()`` and ``close()``.
@@ -74,7 +87,7 @@ Or manually call ``up()`` and ``close()``.
 
     device = TapDevice()
     device.up()
-    device.ifconfig(mtu=1300)
+    device.ipconfig(mtu=1300)
     device.write(b'0000')
     device.close()
 
